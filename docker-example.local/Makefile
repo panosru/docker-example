@@ -17,6 +17,10 @@ start:
 stop:
 	docker-compose stop
 
+restart:
+	docker-compose stop
+	docker-compose start
+
 state:
 	docker-compose ps
 

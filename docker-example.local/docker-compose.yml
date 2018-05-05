@@ -1,23 +1,27 @@
-version: '3'
+version: '3.6'
 
 services:
 
   web:
     build:
-      context: ./etc/nginx
-      dockerfile: Dockerfile.development
+      context: ./etc/nginx/
+      dockerfile: Dockerfile.dev
     container_name: docker-example.local-web
-    ports:
-      - 8000:80
-      - 3000:443
     restart: always
-    volumes:
-      - ./etc/ssl:/etc/ssl
-      - ./app:/var/www
     # cap and privileged needed for slowlog
     cap_add:
       - CAP_SYS_PTRACE
     privileged: true
+    ports:
+      - 8000:80
+      - 3000:443
+    volumes:
+      - ./etc/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./etc/ssl:/etc/ssl
+      - ./app:/var/www
+    env_file:
+      - ./etc/nginx/.env
+      - ./etc/nginx/dev.env
     environment:
       VIRTUAL_HOST: docker-example.local
       VIRTUAL_PORT: 80
@@ -29,13 +33,21 @@ services:
   app:
     build:
       context: ./etc/php/
-      dockerfile: Dockerfile.development
+      dockerfile: Dockerfile.dev
     container_name: docker-example.local-app
     restart: always
+    cap_add:
+      - CAP_SYS_PTRACE
+    privileged: true
     volumes:
+      - ./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./etc/php/php.dev.ini:/usr/local/etc/php/conf.d/php.dev.ini
+      - ./etc/logs/xdebug.log:/tmp/xdebug.log
+      - ./etc/logs/debug:/tmp/debug
       - ./app:/var/www
     env_file:
-      - ./etc/.env
+      - ./etc/php/.env
+      - ./etc/php/dev.env
 
 networks:
   default:
