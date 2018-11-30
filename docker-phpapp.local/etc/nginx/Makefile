@@ -9,7 +9,7 @@ list:
 #############################
 
 up:
-	docker-compose up
+	docker-compose up -d
 
 start:
 	docker-compose start
@@ -27,9 +27,9 @@ state:
 rebuild:
 	docker-compose stop
 	docker-compose pull
-	docker-compose rm --force app
+	docker-compose rm --force web
 	docker-compose build --no-cache --pull
-#	docker-compose up -d --force-recreate
+	docker-compose up -d --force-recreate
 
 #############################
 # General
@@ -38,10 +38,10 @@ rebuild:
 bash: shell
 
 shell:
-	docker-compose exec --user application app /bin/bash
+	docker-compose exec --user application web /bin/bash
 
 root:
-	docker-compose exec --user root app /bin/bash
+	docker-compose exec --user root web /bin/bash
 
 #############################
 # Argument fix workaround

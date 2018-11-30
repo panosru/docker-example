@@ -9,7 +9,7 @@ list:
 #############################
 
 up:
-	docker-compose up
+	docker-compose up -d
 
 start:
 	docker-compose start
@@ -29,7 +29,7 @@ rebuild:
 	docker-compose pull
 	docker-compose rm --force app
 	docker-compose build --no-cache --pull
-#	docker-compose up -d --force-recreate
+	docker-compose up -d --force-recreate
 
 #############################
 # General

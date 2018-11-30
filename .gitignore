@@ -56,3 +56,5 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+docker-phpapp.local/resources/vendor/
+blackfire/.env

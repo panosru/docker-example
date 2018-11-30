@@ -1,0 +1,35 @@
+version: '3.7'
+
+
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docker-example.local-web
+    restart: always
+    # cap and privileged needed for slowlog
+    cap_add:
+      - CAP_SYS_PTRACE
+    privileged: true
+    expose:
+      - 80
+    volumes:
+      - ./default.nginx:/etc/nginx/conf.d/default.conf
+      - ./access.log:/var/log/nginx/access.log
+      - ./error.log:/var/log/nginx/error.log
+      - ../../app:/var/www
+    env_file:
+      - ./.env
+      - ./dev.env
+    environment:
+      VIRTUAL_HOST: docker-example.local
+      VIRTUAL_PORT: 80
+    external_links:
+      - app
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

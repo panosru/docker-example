@@ -2,11 +2,11 @@ version: '3.7'
 
 services:
 
-  app:
+  phpapp:
     build:
       context: ./etc/php/
       dockerfile: Dockerfile
-    container_name: docker-example.local-app
+    container_name: docker-phpapp.local-app
     restart: always
     cap_add:
       - CAP_SYS_PTRACE
@@ -17,9 +17,16 @@ services:
       - ./etc/logs/xdebug.log:/tmp/xdebug.log
       - ./etc/logs/debug:/tmp/debug
       - ./app:/var/www
+      - ./resources:/var/resources
     env_file:
       - ./etc/php/.env
       - ./etc/php/dev.env
+#    expose:
+#      - 6778
+    entrypoint: /var/www/bootstrap.sh
+#    environment:
+#      VIRTUAL_HOST: docker-phpapp.local
+#      VIRTUAL_PORT: 6778
 
 networks:
   default:
